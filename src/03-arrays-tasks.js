@@ -474,9 +474,12 @@ function sortCitiesArray(arr) {
  *           [0,0,0,1,0],
  *           [0,0,0,0,1]]
  */
-function getIdentityMatrix(/* n */) {
-  throw new Error('Not implemented');
+function getIdentityMatrix(n) {
+  return new Array(n).fill(0).map((r, i) => new Array(n).fill(0).map((c, j) => {
+    if (i === j) { return 1; } return 0;
+  }));
 }
+
 
 /**
  * Creates an array of integers from the specified start to end (inclusive)
@@ -541,8 +544,17 @@ function distinct(arr) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
+function group(array, keySelector, valueSelector) {
+  const map = new Map();
+  array.map((x) => {
+    if (!map.has(keySelector(x))) {
+      map.set(keySelector(x), [valueSelector(x)]);
+    } else {
+      map.set(keySelector(x), map.get(keySelector(x)).concat([valueSelector(x)]));
+    }
+    return x;
+  });
+  return map;
 }
 
 
@@ -559,8 +571,8 @@ function group(/* array, keySelector, valueSelector */) {
  *   [[1, 2], [3, 4], [5, 6]], (x) => x     =>   [ 1, 2, 3, 4, 5, 6 ]
  *   ['one','two','three'], x=>x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
+function selectMany(arr, childrenSelector) {
+  return arr.map((x) => childrenSelector(x)).flat(Infinity);
 }
 
 
@@ -576,8 +588,13 @@ function selectMany(/* arr, childrenSelector */) {
  *   ['one','two','three'], [2]       => 'three'  (arr[2])
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
-function getElementByIndexes(/* arr, indexes */) {
-  throw new Error('Not implemented');
+function getElementByIndexes(arr, indexes) {
+  let tmp = [...arr];
+  indexes.map((x) => {
+    tmp = tmp[x];
+    return x;
+  });
+  return tmp;
 }
 
 
