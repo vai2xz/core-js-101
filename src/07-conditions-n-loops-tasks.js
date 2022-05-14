@@ -215,8 +215,18 @@ function findFirstSingleChar(/* str */) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  let str = '';
+  if (isStartIncluded) {
+    str += '[';
+  } else str += '(';
+  str += Math.min(a, b).toString();
+  str += ', ';
+  str += Math.max(a, b).toString();
+  if (isEndIncluded) {
+    str += ']';
+  } else str += ')';
+  return str;
 }
 
 
@@ -292,8 +302,16 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  function getSum(total, n) {
+    return total + parseInt(n, 10);
+  }
+
+  let tmp = num;
+  while (tmp > 9) {
+    tmp = tmp.toString().split('').reduce(getSum, 0);
+  }
+  return tmp;
 }
 
 
