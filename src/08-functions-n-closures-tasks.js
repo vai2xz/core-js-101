@@ -115,8 +115,20 @@ function memoize(func) {
  * }, 2);
  * retryer() => 2
  */
-function retry(/*  func, attempts */) {
-  throw new Error('Not implemented');
+function retry(func, attempts) {
+  let memo;
+  return () => {
+    let tmp;
+    try {
+      func.apply(this);
+    } catch (err) {
+      memo = attempts - 1;
+      tmp = retry(func, memo)();
+    } finally {
+      tmp = func.apply(this);
+    }
+    return tmp;
+  };
 }
 
 
@@ -143,8 +155,19 @@ function retry(/*  func, attempts */) {
  * cos(3.141592653589793) ends
  *
  */
-function logger(/* func, logFunc */) {
-  throw new Error('Not implemented');
+function logger(func, logFunc) {
+  return (...args) => {
+    let str = '';
+    for (let i = 0; i < args.length; i += 1) {
+      str += JSON.stringify(args[i]);
+      str += ',';
+    }
+    str = str.slice(0, -1);
+    logFunc(`${func.name}(${str}) starts`);
+    const result = func.apply(this, args);
+    logFunc(`${func.name}(${str}) ends`);
+    return result;
+  };
 }
 
 
@@ -161,8 +184,15 @@ function logger(/* func, logFunc */) {
  *   partialUsingArguments(fn, 'a','b','c')('d') => 'abcd'
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
-function partialUsingArguments(/* fn, ...args1 */) {
-  throw new Error('Not implemented');
+function partialUsingArguments(fn, ...args1) {
+  return (...args2) => {
+    let res = '';
+    const args = args1.concat(args2);
+    args.forEach((x) => {
+      res += x;
+    });
+    return res;
+  };
 }
 
 
